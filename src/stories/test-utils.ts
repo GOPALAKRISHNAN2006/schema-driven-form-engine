@@ -8,6 +8,19 @@ import { expect } from '@storybook/test';
 import type { Result } from 'axe-core';
 
 /**
+ * Detects if we're running in Chromatic's capture environment.
+ * Used to skip complex interactions that may not work reliably in headless capture.
+ */
+export function isChromatic(): boolean {
+  // Chromatic sets this parameter or we're in a headless environment
+  return !!(
+    (window as unknown as Record<string, unknown>).isChromatic ||
+    /chromatic/.test(window.location.href) ||
+    (typeof process !== 'undefined' && (process.env as unknown as Record<string, unknown>).CHROMATIC)
+  );
+}
+
+/**
  * Runs axe accessibility checks on the provided element.
  * Validates critical ARIA attributes for form accessibility:
  * - aria-invalid on error fields

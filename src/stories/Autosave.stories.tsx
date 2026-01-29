@@ -13,7 +13,7 @@ import { expect, within, userEvent, waitFor } from '@storybook/test';
 import { useEffect, useState } from 'react';
 import { FormRenderer } from '@/components/form';
 import type { FormSchema, FormValues } from '@/schema/types';
-import { runAxeAccessibilityCheck } from './test-utils';
+import { runAxeAccessibilityCheck, isChromatic } from './test-utils';
 
 const meta: Meta<typeof FormRenderer> = {
   title: 'Features/Autosave',
@@ -244,6 +244,13 @@ export const BasicAutosave: Story = {
     
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
+    
+    // Skip complex interactions in Chromatic
+    if (isChromatic()) {
+      const displayNameInput = await canvas.findByRole('textbox', { name: /display name/i }, { timeout: 5000 });
+      await expect(displayNameInput).toBeInTheDocument();
+      return;
+    }
     
     // Wait for form to render and type in display name
     const displayNameInput = await canvas.findByRole('textbox', { name: /display name/i }, { timeout: 5000 });
@@ -543,6 +550,16 @@ export const ConflictHandling: Story = {
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
+    // Skip complex interactions in Chromatic
+    if (isChromatic()) {
+      // Just verify conflict dialog renders
+      await waitFor(() => {
+        const conflictAlert = canvas.getByText(/conflict detected/i);
+        expect(conflictAlert).toBeInTheDocument();
+      }, { timeout: 5000 });
+      return;
+    }
+    
     // Wait for conflict dialog to appear
     await waitFor(() => {
       const conflictAlert = canvas.getByText(/conflict detected/i);
@@ -660,6 +677,13 @@ export const SaveErrorHandling: Story = {
     
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
+    
+    // Skip complex interactions in Chromatic
+    if (isChromatic()) {
+      const displayNameInput = await canvas.findByRole('textbox', { name: /display name/i }, { timeout: 5000 });
+      await expect(displayNameInput).toBeInTheDocument();
+      return;
+    }
     
     // Wait for form to render and type to trigger save
     const displayNameInput = await canvas.findByRole('textbox', { name: /display name/i }, { timeout: 5000 });

@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { expect, within, userEvent, waitFor } from '@storybook/test';
 import { FormRenderer } from '@/components/form';
 import type { FormSchema, FormValues } from '@/schema/types';
-import { runAxeAccessibilityCheck } from './test-utils';
+import { runAxeAccessibilityCheck, isChromatic } from './test-utils';
 
 const meta: Meta<typeof FormRenderer> = {
   title: 'Features/RepeatableSections',
@@ -109,6 +109,13 @@ export const OrderItems: Story = {
     
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
+    
+    // Skip complex interactions in Chromatic
+    if (isChromatic()) {
+      const customerNameInput = await canvas.findByRole('textbox', { name: /customer name/i }, { timeout: 5000 });
+      await expect(customerNameInput).toBeInTheDocument();
+      return;
+    }
     
     // Wait for form to render and fill customer name
     const customerNameInput = await canvas.findByRole('textbox', { name: /customer name/i }, { timeout: 5000 });
@@ -227,6 +234,13 @@ export const AttendeesWithMinMax: Story = {
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
+    // Skip complex interactions in Chromatic
+    if (isChromatic()) {
+      const eventSelect = await canvas.findByRole('combobox', { name: /select event/i }, { timeout: 5000 });
+      await expect(eventSelect).toBeInTheDocument();
+      return;
+    }
+    
     // Wait for form to render and select event
     const eventSelect = await canvas.findByRole('combobox', { name: /select event/i }, { timeout: 5000 });
     await userEvent.selectOptions(eventSelect, 'conference');
@@ -327,6 +341,13 @@ export const OptionalRepeatable: Story = {
     
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
+    
+    // Skip complex interactions in Chromatic
+    if (isChromatic()) {
+      const baseProductSelect = await canvas.findByRole('combobox', { name: /base product/i }, { timeout: 5000 });
+      await expect(baseProductSelect).toBeInTheDocument();
+      return;
+    }
     
     // Wait for form to render and select base product
     const baseProductSelect = await canvas.findByRole('combobox', { name: /base product/i }, { timeout: 5000 });

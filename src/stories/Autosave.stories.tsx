@@ -395,6 +395,14 @@ export const ResumeDraft: Story = {
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
+    // Skip complex interactions in Chromatic
+    if (isChromatic()) {
+      // Just verify the form renders
+      const displayNameInput = await canvas.findByRole('textbox', { name: /display name/i }, { timeout: 5000 });
+      await expect(displayNameInput).toBeInTheDocument();
+      return;
+    }
+    
     // Draft banner should appear
     await waitFor(() => {
       const banner = canvas.getByText(/resume previous session/i);

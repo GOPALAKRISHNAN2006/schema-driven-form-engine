@@ -555,18 +555,17 @@ export const ConflictHandling: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     
-    // Run accessibility check
-    await runAxeAccessibilityCheck(canvasElement);
-    
-    // Skip complex interactions in Chromatic
+    // Skip all tests in Chromatic - just verify component renders
     if (isChromatic()) {
-      // Just verify conflict dialog renders
       await waitFor(() => {
         const conflictAlert = canvas.getByText(/conflict detected/i);
         expect(conflictAlert).toBeInTheDocument();
       }, { timeout: 5000 });
       return;
     }
+    
+    // Run accessibility check (only in local/CI, not Chromatic)
+    await runAxeAccessibilityCheck(canvasElement);
     
     // Wait for conflict dialog to appear
     await waitFor(() => {

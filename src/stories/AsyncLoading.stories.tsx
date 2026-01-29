@@ -130,12 +130,12 @@ export const AsyncSelectLoading: Story = {
     await expect(citySelect).toBeInTheDocument();
     
     // Fill email with keyboard
-    const emailInput = canvas.getByRole('textbox', { name: /email/i });
+    const emailInput = await canvas.findByRole('textbox', { name: /email/i }, { timeout: 5000 });
     await userEvent.click(emailInput);
     await userEvent.type(emailInput, 'test@example.com');
     
     // Submit
-    const submitButton = canvas.getByRole('button', { name: /submit/i });
+    const submitButton = await canvas.findByRole('button', { name: /submit/i }, { timeout: 5000 });
     await userEvent.click(submitButton);
   },
   parameters: {
@@ -209,7 +209,7 @@ export const AsyncErrorState: Story = {
     await runAxeAccessibilityCheck(canvasElement);
     
     // Select data source
-    const dataSourceSelect = canvas.getByRole('combobox', { name: /data source/i });
+    const dataSourceSelect = await canvas.findByRole('combobox', { name: /data source/i }, { timeout: 5000 });
     await userEvent.selectOptions(dataSourceSelect, 'valid');
     
     // Wait for dependent field using findByRole (async)

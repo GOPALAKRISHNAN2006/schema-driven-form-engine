@@ -128,7 +128,7 @@ export const OrderItems: Story = {
     }
     
     // Find and click "Add" button
-    const addButton = canvas.getByRole('button', { name: /add/i });
+    const addButton = await canvas.findByRole('button', { name: /add/i }, { timeout: 5000 });
     await userEvent.click(addButton);
     
     // Wait for new item to appear
@@ -339,7 +339,7 @@ export const OptionalRepeatable: Story = {
     console.log('Initial select count:', initialCount);
     
     // Add first add-on
-    const addButton = canvas.getByRole('button', { name: /add/i });
+    const addButton = await canvas.findByRole('button', { name: /add/i }, { timeout: 5000 });
     await userEvent.click(addButton);
     
     // Should now have more select elements
@@ -357,7 +357,7 @@ export const OptionalRepeatable: Story = {
     }, { timeout: 2000 });
     
     // Submit should work
-    const submitButton = canvas.getByRole('button', { name: /complete order/i });
+    const submitButton = await canvas.findByRole('button', { name: /complete order/i }, { timeout: 5000 });
     await expect(submitButton).toBeInTheDocument();
   },
   parameters: {

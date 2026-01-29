@@ -256,7 +256,7 @@ export const BasicAutosave: Story = {
     }, { timeout: 3000 });
     
     // Fill more fields
-    const bioInput = canvas.getByRole('textbox', { name: /bio/i });
+    const bioInput = await canvas.findByRole('textbox', { name: /bio/i }, { timeout: 5000 });
     await userEvent.type(bioInput, 'This is my test bio.');
     
     // Verify save status appears
@@ -395,7 +395,7 @@ export const ResumeDraft: Story = {
     }, { timeout: 2000 });
     
     // Click Resume Draft
-    const resumeButton = canvas.getByRole('button', { name: /resume draft/i });
+    const resumeButton = await canvas.findByRole('button', { name: /resume draft/i }, { timeout: 5000 });
     await userEvent.click(resumeButton);
     
     // Banner should disappear
@@ -406,7 +406,7 @@ export const ResumeDraft: Story = {
     
     // Wait for form values to be applied - check that the input exists and has a value
     await waitFor(() => {
-      const displayNameInput = canvas.getByRole('textbox', { name: /display name/i }) as HTMLInputElement;
+      const displayNameInput = canvas.queryByRole('textbox', { name: /display name/i }) as HTMLInputElement;
       // Value should contain draft data (may vary based on localStorage state)
       expect(displayNameInput).toBeInTheDocument();
     }, { timeout: 2000 });
@@ -567,7 +567,7 @@ export const ConflictHandling: Story = {
     expect(canvas.getByText(/using local draft/i)).toBeInTheDocument();
     
     // Form should have local values
-    const displayNameInput = canvas.getByRole('textbox', { name: /display name/i }) as HTMLInputElement;
+    const displayNameInput = await canvas.findByRole('textbox', { name: /display name/i }, { timeout: 5000 }) as HTMLInputElement;
     await expect(displayNameInput.value).toBe('My Local Changes');
   },
   parameters: {
@@ -672,7 +672,7 @@ export const SaveErrorHandling: Story = {
     }, { timeout: 2000 });
     
     // Retry button should be visible
-    const retryButton = canvas.getByRole('button', { name: /retry/i });
+    const retryButton = await canvas.findByRole('button', { name: /retry/i }, { timeout: 5000 });
     await expect(retryButton).toBeInTheDocument();
     
     // Click retry

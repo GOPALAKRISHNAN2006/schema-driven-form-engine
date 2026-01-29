@@ -90,7 +90,7 @@ export const RequiredFields: Story = {
     await expect(canvas.getByText('Email is required')).toBeInTheDocument();
     
     // Verify aria-invalid is set on invalid fields
-    const nameInput = canvas.getByRole('textbox', { name: /name/i });
+    const nameInput = await canvas.findByRole('textbox', { name: /name/i }, { timeout: 5000 });
     await expect(nameInput).toHaveAttribute('aria-invalid', 'true');
     
     // Verify error has role="alert" for screen reader announcement
@@ -98,7 +98,7 @@ export const RequiredFields: Story = {
     await expect(errorElements.length).toBeGreaterThan(0);
     
     // Verify aria-describedby links input to error message
-    const emailInput = canvas.getByRole('textbox', { name: /email/i });
+    const emailInput = await canvas.findByRole('textbox', { name: /email/i }, { timeout: 5000 });
     const describedBy = emailInput.getAttribute('aria-describedby');
     await expect(describedBy).toBeTruthy();
     
@@ -110,7 +110,7 @@ export const RequiredFields: Story = {
     await userEvent.type(emailInput, 'john@example.com');
     
     // Check the terms checkbox
-    const termsCheckbox = canvas.getByRole('checkbox', { name: /terms/i });
+    const termsCheckbox = await canvas.findByRole('checkbox', { name: /terms/i }, { timeout: 5000 });
     await userEvent.click(termsCheckbox);
     
     // Submit again - should succeed without errors

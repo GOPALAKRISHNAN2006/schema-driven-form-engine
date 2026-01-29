@@ -114,11 +114,13 @@ export const AsyncSelectLoading: Story = {
     // Run initial accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
+    // Wait for form to render and find country select
+    const countrySelect = await canvas.findByRole('combobox', { name: /country/i }, { timeout: 5000 });
+    
     // City field should not be visible initially
     await expect(canvas.queryByRole('combobox', { name: /city/i })).not.toBeInTheDocument();
     
     // Select a country using keyboard
-    const countrySelect = canvas.getByRole('combobox', { name: /country/i });
     await userEvent.click(countrySelect);
     await userEvent.keyboard('{ArrowDown}'); // Navigate to first option
     await userEvent.keyboard('{Enter}'); // Select it
@@ -292,8 +294,8 @@ export const AsyncKeyboardNavigation: Story = {
     // Initial accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
-    // Focus on region select
-    const regionSelect = canvas.getByRole('combobox', { name: /region/i });
+    // Wait for form to render and focus on region select
+    const regionSelect = await canvas.findByRole('combobox', { name: /region/i }, { timeout: 5000 });
     await userEvent.click(regionSelect);
     
     // Use arrow keys to select

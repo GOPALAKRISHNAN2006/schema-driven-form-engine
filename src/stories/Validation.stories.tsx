@@ -79,8 +79,10 @@ export const RequiredFields: Story = {
     // Run axe accessibility check first
     await runAxeAccessibilityCheck(canvasElement);
     
+    // Wait for form to render
+    const submitButton = await canvas.findByRole('button', { name: /submit/i }, { timeout: 5000 });
+    
     // Try to submit without filling any fields
-    const submitButton = canvas.getByRole('button', { name: /submit/i });
     await userEvent.click(submitButton);
     
     // Verify validation errors appear
@@ -668,7 +670,10 @@ export const AsyncUsernameCheck: Story = {
     // Run initial accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
-    const usernameInput = canvas.getByTestId('username-input');
+    // Wait for form to render and get username input
+    const usernameInput = await waitFor(() => {
+      return canvas.getByTestId('username-input');
+    }, { timeout: 5000 });
     
     // --- Test 1: Check "admin" (taken username) ---
     await userEvent.type(usernameInput, 'admin');

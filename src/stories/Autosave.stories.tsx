@@ -245,8 +245,8 @@ export const BasicAutosave: Story = {
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
-    // Type in display name
-    const displayNameInput = canvas.getByRole('textbox', { name: /display name/i });
+    // Wait for form to render and type in display name
+    const displayNameInput = await canvas.findByRole('textbox', { name: /display name/i }, { timeout: 5000 });
     await userEvent.type(displayNameInput, 'Test User');
     
     // Wait for autosave indicator
@@ -543,18 +543,18 @@ export const ConflictHandling: Story = {
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
-    // Conflict dialog should appear
+    // Wait for conflict dialog to appear
     await waitFor(() => {
       const conflictAlert = canvas.getByText(/conflict detected/i);
       expect(conflictAlert).toBeInTheDocument();
-    });
+    }, { timeout: 5000 });
     
     // Should show both versions
     expect(canvas.getByText(/local draft/i)).toBeInTheDocument();
     expect(canvas.getByText(/server version/i)).toBeInTheDocument();
     
     // Click Keep Local
-    const keepLocalButton = canvas.getByRole('button', { name: /keep local/i });
+    const keepLocalButton = await canvas.findByRole('button', { name: /keep local/i }, { timeout: 5000 });
     await userEvent.click(keepLocalButton);
     
     // Conflict dialog should disappear
@@ -661,8 +661,8 @@ export const SaveErrorHandling: Story = {
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
-    // Type to trigger save
-    const displayNameInput = canvas.getByRole('textbox', { name: /display name/i });
+    // Wait for form to render and type to trigger save
+    const displayNameInput = await canvas.findByRole('textbox', { name: /display name/i }, { timeout: 5000 });
     await userEvent.type(displayNameInput, 'Test');
     
     // Wait for error state

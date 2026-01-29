@@ -110,8 +110,8 @@ export const OrderItems: Story = {
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
-    // Fill customer name
-    const customerNameInput = canvas.getByRole('textbox', { name: /customer name/i });
+    // Wait for form to render and fill customer name
+    const customerNameInput = await canvas.findByRole('textbox', { name: /customer name/i }, { timeout: 5000 });
     await userEvent.type(customerNameInput, 'John Doe');
     
     // Wait for first repeatable item to appear (minInstances: 1)
@@ -227,8 +227,8 @@ export const AttendeesWithMinMax: Story = {
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
-    // Select event
-    const eventSelect = canvas.getByRole('combobox', { name: /select event/i });
+    // Wait for form to render and select event
+    const eventSelect = await canvas.findByRole('combobox', { name: /select event/i }, { timeout: 5000 });
     await userEvent.selectOptions(eventSelect, 'conference');
     
     // Wait for attendee fields to render (minInstances: 2)
@@ -328,8 +328,8 @@ export const OptionalRepeatable: Story = {
     // Run accessibility check
     await runAxeAccessibilityCheck(canvasElement);
     
-    // Select base product
-    const baseProductSelect = canvas.getByRole('combobox', { name: /base product/i });
+    // Wait for form to render and select base product
+    const baseProductSelect = await canvas.findByRole('combobox', { name: /base product/i }, { timeout: 5000 });
     await userEvent.selectOptions(baseProductSelect, 'pro');
     
     // Check initial addons count (may be 0 or 1 depending on implementation)

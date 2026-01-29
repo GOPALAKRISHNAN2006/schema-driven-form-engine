@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting - STRICT MODE */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    // exactOptionalPropertyTypes is strict and can cause many incompatibilities with
+    // third-party types and existing code. Set to false to reduce noisy errors.
+    "exactOptionalPropertyTypes": false,
+
+    // Easier interop with CommonJS packages and ambient types used by tools
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    // Add ambient type packages used by the dev tooling (Vite, Node)
+    "types": ["vite/client", "node"],
+
+    /* Paths */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/schema/*": ["./src/schema/*"],
+      "@/state/*": ["./src/state/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/utils/*": ["./src/utils/*"]
+    }
+  },
+  "include": ["src"]
+}

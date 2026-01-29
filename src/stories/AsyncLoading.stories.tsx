@@ -115,25 +115,20 @@ export const AsyncSelectLoading: Story = {
     await runAxeAccessibilityCheck(canvasElement);
     
     // City field should not be visible initially
-    await expect(canvas.queryByLabelText(/city/i)).not.toBeInTheDocument();
+    await expect(canvas.queryByRole('combobox', { name: /city/i })).not.toBeInTheDocument();
     
     // Select a country using keyboard
-    const countrySelect = canvas.getByLabelText(/country/i);
+    const countrySelect = canvas.getByRole('combobox', { name: /country/i });
     await userEvent.click(countrySelect);
     await userEvent.keyboard('{ArrowDown}'); // Navigate to first option
     await userEvent.keyboard('{Enter}'); // Select it
     
     // Wait for conditional field to appear (with longer timeout for CI)
-    await waitFor(() => {
-      expect(canvas.getByLabelText(/city/i)).toBeInTheDocument();
-    }, { timeout: 3000 });
-    
-    // City field should now be visible
-    const citySelect = canvas.getByLabelText(/city/i);
+    const citySelect = await canvas.findByRole('combobox', { name: /city/i }, { timeout: 3000 });
     await expect(citySelect).toBeInTheDocument();
     
     // Fill email with keyboard
-    const emailInput = canvas.getByLabelText(/email/i);
+    const emailInput = canvas.getByRole('textbox', { name: /email/i });
     await userEvent.click(emailInput);
     await userEvent.type(emailInput, 'test@example.com');
     
@@ -212,16 +207,11 @@ export const AsyncErrorState: Story = {
     await runAxeAccessibilityCheck(canvasElement);
     
     // Select data source
-    const dataSourceSelect = canvas.getByLabelText(/data source/i);
+    const dataSourceSelect = canvas.getByRole('combobox', { name: /data source/i });
     await userEvent.selectOptions(dataSourceSelect, 'valid');
     
-    // Wait for dependent field
-    await waitFor(() => {
-      expect(canvas.getByLabelText(/category/i)).toBeInTheDocument();
-    }, { timeout: 2000 });
-    
-    // Category select should be visible
-    const categorySelect = canvas.getByLabelText(/category/i);
+    // Wait for dependent field using findByRole (async)
+    const categorySelect = await canvas.findByRole('combobox', { name: /category/i }, { timeout: 3000 });
     await expect(categorySelect).toBeInTheDocument();
     
     // Tab to category field and verify it's focusable
@@ -303,33 +293,23 @@ export const AsyncKeyboardNavigation: Story = {
     await runAxeAccessibilityCheck(canvasElement);
     
     // Focus on region select
-    const regionSelect = canvas.getByLabelText(/region/i);
+    const regionSelect = canvas.getByRole('combobox', { name: /region/i });
     await userEvent.click(regionSelect);
     
     // Use arrow keys to select
     await userEvent.keyboard('{ArrowDown}');
     await userEvent.keyboard('{Enter}');
     
-    // Timezone should now appear
-    await waitFor(() => {
-      expect(canvas.getByLabelText(/timezone/i)).toBeInTheDocument();
-    }, { timeout: 2000 });
-    
-    // Tab to timezone
-    const timezoneSelect = canvas.getByLabelText(/timezone/i);
+    // Timezone should now appear - use findByRole (async)
+    const timezoneSelect = await canvas.findByRole('combobox', { name: /timezone/i }, { timeout: 3000 });
     await userEvent.click(timezoneSelect);
     
     // Select timezone with keyboard
     await userEvent.keyboard('{ArrowDown}');
     await userEvent.keyboard('{Enter}');
     
-    // Notifications checkbox should appear
-    await waitFor(() => {
-      expect(canvas.getByLabelText(/notifications/i)).toBeInTheDocument();
-    }, { timeout: 2000 });
-    
-    // Click on checkbox
-    const checkbox = canvas.getByLabelText(/notifications/i);
+    // Notifications checkbox should appear - use findByRole (async)
+    const checkbox = await canvas.findByRole('checkbox', { name: /notifications/i }, { timeout: 3000 });
     await userEvent.click(checkbox);
     
     // Toggle with keyboard

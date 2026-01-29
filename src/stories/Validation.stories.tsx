@@ -536,7 +536,7 @@ const AsyncUsernameValidationDemo = () => {
             onBlur={handleBlur}
             placeholder="Enter a username"
             className={getInputClassName()}
-            aria-invalid={validationState === 'invalid'}
+            aria-invalid={validationState === 'invalid' ? 'true' : 'false'}
             aria-describedby={
               validationState === 'checking' ? 'username-checking' :
               validationState === 'invalid' ? 'username-error' :
@@ -613,6 +613,7 @@ const AsyncUsernameValidationDemo = () => {
           <p 
             id="username-checking" 
             className="mt-1 text-sm text-blue-600 flex items-center gap-1"
+            role="status"
             aria-live="polite"
             data-testid="checking-message"
           >

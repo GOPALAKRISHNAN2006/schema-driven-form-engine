@@ -5,41 +5,17 @@
  */
 
 import { expect } from '@storybook/test';
+import chromaticIsChromatic from 'chromatic/isChromatic';
 import type { Result } from 'axe-core';
 
 /**
  * Detects if we're running in Chromatic's capture environment.
+ * Uses Chromatic's official detection function.
  * Used to skip complex interactions that may not work reliably in headless capture.
  */
 export function isChromatic(): boolean {
-  // Check multiple ways Chromatic can be detected
-  try {
-    // 1. Chromatic adds isChromatic to window
-    if (typeof window !== 'undefined') {
-      const win = window as unknown as Record<string, unknown>;
-      if (win.isChromatic) {
-        return true;
-      }
-      // 2. Check URL for chromatic indicators
-      if (/chromatic/.test(window.location.href) || /chromatic\.com/.test(window.location.host)) {
-        return true;
-      }
-      // 3. Check for Chromatic user agent markers
-      if (/Chromatic|HeadlessChrome/.test(navigator.userAgent)) {
-        return true;
-      }
-    }
-    // 4. Check environment variables (build time)
-    if (typeof process !== 'undefined' && process.env) {
-      const env = process.env as unknown as Record<string, unknown>;
-      if (env.CHROMATIC || env.STORYBOOK_CHROMATIC) {
-        return true;
-      }
-    }
-  } catch {
-    // Ignore errors in detection
-  }
-  return false;
+  // Use Chromatic's official detection
+  return chromaticIsChromatic();
 }
 
 /**

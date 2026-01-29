@@ -89,23 +89,23 @@ export const SimpleCondition: Story = {
     await runAxeAccessibilityCheck(canvasElement);
     
     // Initially, conditional fields should NOT be visible
-    await expect(canvas.queryByLabelText(/street address/i)).not.toBeInTheDocument();
-    await expect(canvas.queryByLabelText(/city/i)).not.toBeInTheDocument();
+    await expect(canvas.queryByRole('textbox', { name: /street address/i })).not.toBeInTheDocument();
+    await expect(canvas.queryByRole('textbox', { name: /city/i })).not.toBeInTheDocument();
     
     // Select "Yes" to show conditional fields
-    const selectField = canvas.getByLabelText(/do you have a shipping address/i);
+    const selectField = canvas.getByRole('combobox', { name: /do you have a shipping address/i });
     await userEvent.selectOptions(selectField, 'yes');
     
     // Now fields should be visible
-    await expect(canvas.getByLabelText(/street address/i)).toBeInTheDocument();
-    await expect(canvas.getByLabelText(/city/i)).toBeInTheDocument();
+    await expect(await canvas.findByRole('textbox', { name: /street address/i })).toBeInTheDocument();
+    await expect(await canvas.findByRole('textbox', { name: /city/i })).toBeInTheDocument();
     
     // Test that hidden fields don't block submission
     // Select "No" to hide fields again
     await userEvent.selectOptions(selectField, 'no');
     
     // Fields should be hidden
-    await expect(canvas.queryByLabelText(/street address/i)).not.toBeInTheDocument();
+    await expect(canvas.queryByRole('textbox', { name: /street address/i })).not.toBeInTheDocument();
     
     // Submit should work even though hidden required fields exist
     const submitButton = canvas.getByRole('button', { name: /submit/i });
@@ -177,23 +177,23 @@ export const AndCondition: Story = {
     await runAxeAccessibilityCheck(canvasElement);
     
     // Computer type should NOT be visible initially
-    await expect(canvas.queryByLabelText(/preferred computer type/i)).not.toBeInTheDocument();
+    await expect(canvas.queryByRole('combobox', { name: /preferred computer type/i })).not.toBeInTheDocument();
     
     // Check only first checkbox - computer type should still be hidden
-    const isEmployeeCheckbox = canvas.getByLabelText(/i am an employee/i);
+    const isEmployeeCheckbox = canvas.getByRole('checkbox', { name: /i am an employee/i });
     await userEvent.click(isEmployeeCheckbox);
-    await expect(canvas.queryByLabelText(/preferred computer type/i)).not.toBeInTheDocument();
+    await expect(canvas.queryByRole('combobox', { name: /preferred computer type/i })).not.toBeInTheDocument();
     
     // Check second checkbox - NOW computer type should appear (AND condition met)
-    const hasComputerCheckbox = canvas.getByLabelText(/i need a company computer/i);
+    const hasComputerCheckbox = canvas.getByRole('checkbox', { name: /i need a company computer/i });
     await userEvent.click(hasComputerCheckbox);
     
     // Both conditions met - field should appear
-    await expect(canvas.getByLabelText(/preferred computer type/i)).toBeInTheDocument();
+    await expect(await canvas.findByRole('combobox', { name: /preferred computer type/i })).toBeInTheDocument();
     
     // Uncheck one - field should disappear
     await userEvent.click(isEmployeeCheckbox);
-    await expect(canvas.queryByLabelText(/preferred computer type/i)).not.toBeInTheDocument();
+    await expect(canvas.queryByRole('combobox', { name: /preferred computer type/i })).not.toBeInTheDocument();
   },
   parameters: {
     docs: {
@@ -254,24 +254,24 @@ export const OrCondition: Story = {
     await runAxeAccessibilityCheck(canvasElement);
     
     // Message field should NOT be visible initially
-    await expect(canvas.queryByLabelText(/your message/i)).not.toBeInTheDocument();
+    await expect(canvas.queryByRole('textbox', { name: /your message/i })).not.toBeInTheDocument();
     
     // Check first checkbox - message should appear (OR condition)
-    const needsSupportCheckbox = canvas.getByLabelText(/i need technical support/i);
+    const needsSupportCheckbox = canvas.getByRole('checkbox', { name: /i need technical support/i });
     await userEvent.click(needsSupportCheckbox);
-    await expect(canvas.getByLabelText(/your message/i)).toBeInTheDocument();
+    await expect(await canvas.findByRole('textbox', { name: /your message/i })).toBeInTheDocument();
     
     // Uncheck first, check second - should still be visible
     await userEvent.click(needsSupportCheckbox);
-    await expect(canvas.queryByLabelText(/your message/i)).not.toBeInTheDocument();
+    await expect(canvas.queryByRole('textbox', { name: /your message/i })).not.toBeInTheDocument();
     
-    const hasQuestionCheckbox = canvas.getByLabelText(/i have a question/i);
+    const hasQuestionCheckbox = canvas.getByRole('checkbox', { name: /i have a question/i });
     await userEvent.click(hasQuestionCheckbox);
-    await expect(canvas.getByLabelText(/your message/i)).toBeInTheDocument();
+    await expect(await canvas.findByRole('textbox', { name: /your message/i })).toBeInTheDocument();
     
     // Both checked - still visible
     await userEvent.click(needsSupportCheckbox);
-    await expect(canvas.getByLabelText(/your message/i)).toBeInTheDocument();
+    await expect(await canvas.findByRole('textbox', { name: /your message/i })).toBeInTheDocument();
   },
   parameters: {
     docs: {

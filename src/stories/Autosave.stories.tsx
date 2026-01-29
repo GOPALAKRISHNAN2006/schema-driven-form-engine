@@ -114,10 +114,10 @@ const AutosaveStatusIndicator = ({
   status: 'idle' | 'saving' | 'saved' | 'error' 
 }) => {
   const statusStyles = {
-    idle: 'text-gray-400',
-    saving: 'text-blue-500 animate-pulse',
-    saved: 'text-green-600',
-    error: 'text-red-600',
+    idle: 'text-gray-600',
+    saving: 'text-blue-700 animate-pulse',
+    saved: 'text-green-700',
+    error: 'text-red-700',
   };
 
   const statusText = {
@@ -246,7 +246,7 @@ export const BasicAutosave: Story = {
     await runAxeAccessibilityCheck(canvasElement);
     
     // Type in display name
-    const displayNameInput = canvas.getByLabelText(/display name/i);
+    const displayNameInput = canvas.getByRole('textbox', { name: /display name/i });
     await userEvent.type(displayNameInput, 'Test User');
     
     // Wait for autosave indicator
@@ -256,7 +256,7 @@ export const BasicAutosave: Story = {
     }, { timeout: 3000 });
     
     // Fill more fields
-    const bioInput = canvas.getByLabelText(/bio/i);
+    const bioInput = canvas.getByRole('textbox', { name: /bio/i });
     await userEvent.type(bioInput, 'This is my test bio.');
     
     // Verify save status appears
@@ -406,7 +406,7 @@ export const ResumeDraft: Story = {
     
     // Wait for form values to be applied - check that the input exists and has a value
     await waitFor(() => {
-      const displayNameInput = canvas.getByLabelText(/display name/i) as HTMLInputElement;
+      const displayNameInput = canvas.getByRole('textbox', { name: /display name/i }) as HTMLInputElement;
       // Value should contain draft data (may vary based on localStorage state)
       expect(displayNameInput).toBeInTheDocument();
     }, { timeout: 2000 });
@@ -567,7 +567,7 @@ export const ConflictHandling: Story = {
     expect(canvas.getByText(/using local draft/i)).toBeInTheDocument();
     
     // Form should have local values
-    const displayNameInput = canvas.getByLabelText(/display name/i) as HTMLInputElement;
+    const displayNameInput = canvas.getByRole('textbox', { name: /display name/i }) as HTMLInputElement;
     await expect(displayNameInput.value).toBe('My Local Changes');
   },
   parameters: {
@@ -662,7 +662,7 @@ export const SaveErrorHandling: Story = {
     await runAxeAccessibilityCheck(canvasElement);
     
     // Type to trigger save
-    const displayNameInput = canvas.getByLabelText(/display name/i);
+    const displayNameInput = canvas.getByRole('textbox', { name: /display name/i });
     await userEvent.type(displayNameInput, 'Test');
     
     // Wait for error state

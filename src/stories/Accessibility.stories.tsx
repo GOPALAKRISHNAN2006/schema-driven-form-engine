@@ -144,7 +144,7 @@ export const FullyAccessibleForm: Story = {
     await expect(canvas.getByText('First name is required')).toBeInTheDocument();
     
     // Validate aria-invalid on error fields
-    const firstNameInput = canvas.getByLabelText(/first name/i);
+    const firstNameInput = canvas.getByRole('textbox', { name: /first name/i });
     await validateAriaAttributes(firstNameInput, true);
     
     // Verify role="alert" exists for screen reader announcement
@@ -161,15 +161,15 @@ export const FullyAccessibleForm: Story = {
     
     // Fill form correctly
     await userEvent.type(firstNameInput, 'John');
-    await userEvent.type(canvas.getByLabelText(/last name/i), 'Doe');
-    await userEvent.type(canvas.getByLabelText(/email address/i), 'john@example.com');
+    await userEvent.type(canvas.getByRole('textbox', { name: /last name/i }), 'Doe');
+    await userEvent.type(canvas.getByRole('textbox', { name: /email address/i }), 'john@example.com');
     
     // Select notification preference
-    const notificationSelect = canvas.getByLabelText(/notification preference/i);
+    const notificationSelect = canvas.getByRole('combobox', { name: /notification preference/i });
     await userEvent.selectOptions(notificationSelect, 'email');
     
     // Accept terms
-    const termsCheckbox = canvas.getByLabelText(/terms of service/i);
+    const termsCheckbox = canvas.getByRole('checkbox', { name: /terms of service/i });
     await userEvent.click(termsCheckbox);
     
     // Re-run axe check after filling form
@@ -257,10 +257,10 @@ export const KeyboardNavigation: Story = {
     await runAxeAccessibilityCheck(canvasElement);
     
     // Get form elements
-    const textInput = canvas.getByLabelText(/field 1/i);
-    const selectInput = canvas.getByLabelText(/field 2/i);
-    const checkbox = canvas.getByLabelText(/field 3/i);
-    const textarea = canvas.getByLabelText(/field 4/i);
+    const textInput = canvas.getByRole('textbox', { name: /field 1/i });
+    const selectInput = canvas.getByRole('combobox', { name: /field 2/i });
+    const checkbox = canvas.getByRole('checkbox', { name: /field 3/i });
+    const textarea = canvas.getByRole('textbox', { name: /field 4/i });
     
     // Test Tab navigation - start from text input
     await userEvent.click(textInput);

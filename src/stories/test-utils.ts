@@ -12,12 +12,34 @@ import type { Result } from 'axe-core';
  * Used to skip complex interactions that may not work reliably in headless capture.
  */
 export function isChromatic(): boolean {
-  // Chromatic sets this parameter or we're in a headless environment
-  return !!(
-    (window as unknown as Record<string, unknown>).isChromatic ||
-    /chromatic/.test(window.location.href) ||
-    (typeof process !== 'undefined' && (process.env as unknown as Record<string, unknown>).CHROMATIC)
-  );
+  // Check multiple ways Chromatic can be detected
+  try {
+    // 1. Chromatic adds isChromatic to window
+    if (typeof window !== 'undefined') {
+      const win = window as unknown as Record<string, unknown>;
+      if (win.isChromatic) {
+        return true;
+      }
+      // 2. Check URL for chromatic indicators
+      if (/chromatic/.test(window.location.href) || /chromatic\.com/.test(window.location.host)) {
+        return true;
+      }
+      // 3. Check for Chromatic user agent markers
+      if (/Chromatic|HeadlessChrome/.test(navigator.userAgent)) {
+        return true;
+      }
+    }
+    // 4. Check environment variables (build time)
+    if (typeof process !== 'undefined' && process.env) {
+      const env = process.env as unknown as Record<string, unknown>;
+      if (env.CHROMATIC || env.STORYBOOK_CHROMATIC) {
+        return true;
+      }
+    }
+  } catch {
+    // Ignore errors in detection
+  }
+  return false;
 }
 
 /**

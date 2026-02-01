@@ -337,11 +337,82 @@ export const KeyboardNavigation: Story = {
 
 // ============= HIGH CONTRAST =============
 
+const highContrastSchema: FormSchema = {
+  id: 'high-contrast-form',
+  version: '1.0',
+  title: 'High Contrast Accessibility Demo',
+  description: 'This form demonstrates high contrast mode support with WCAG 2.1 AA compliant color ratios.',
+  sections: [
+    {
+      id: 'main',
+      fields: [
+        {
+          id: 'username',
+          type: 'text',
+          label: 'Username',
+          placeholder: 'Enter username',
+          validation: [{ type: 'required', message: 'Username is required' }],
+        },
+        {
+          id: 'password',
+          type: 'text',
+          label: 'Password',
+          inputType: 'password',
+          helperText: 'Must be at least 8 characters',
+          validation: [{ type: 'required', message: 'Password is required' }],
+        },
+        {
+          id: 'priority',
+          type: 'select',
+          label: 'Priority Level',
+          options: [
+            { value: 'low', label: 'Low Priority' },
+            { value: 'medium', label: 'Medium Priority' },
+            { value: 'high', label: 'High Priority' },
+          ],
+        },
+        {
+          id: 'rememberMe',
+          type: 'checkbox',
+          label: 'Remember me on this device',
+        },
+      ],
+    },
+  ],
+};
+
 export const HighContrastMode: Story = {
   args: {
-    schema: accessibleFormSchema,
+    schema: highContrastSchema,
     className: 'p-6 bg-white',
     onSubmit: (values: FormValues) => console.log('Submitted:', values),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    
+    // Run axe accessibility check - this validates color contrast
+    await runAxeAccessibilityCheck(canvasElement);
+    
+    // Skip complex interactions in Chromatic
+    if (isChromatic()) {
+      await expect(canvas.getByRole('textbox', { name: /username/i })).toBeInTheDocument();
+      return;
+    }
+    
+    // Test that error states maintain high contrast
+    const submitButton = canvas.getByRole('button', { name: /submit/i });
+    await userEvent.click(submitButton);
+    
+    // Verify error messages appear with proper contrast
+    await expect(canvas.getByText('Username is required')).toBeInTheDocument();
+    await expect(canvas.getByText('Password is required')).toBeInTheDocument();
+    
+    // Verify aria-invalid is set (visual indicator)
+    const usernameInput = canvas.getByRole('textbox', { name: /username/i });
+    await expect(usernameInput).toHaveAttribute('aria-invalid', 'true');
+    
+    // Run axe again to verify error states maintain contrast
+    await runAxeAccessibilityCheck(canvasElement);
   },
   parameters: {
     backgrounds: {
@@ -349,7 +420,19 @@ export const HighContrastMode: Story = {
     },
     docs: {
       description: {
-        story: 'Form displayed in high contrast mode. All elements maintain sufficient color contrast ratios (4.5:1 for normal text, 3:1 for large text).',
+        story: `
+**High Contrast Mode Support**
+
+This form demonstrates accessibility in high contrast environments:
+
+- **Color Contrast**: All text maintains 4.5:1 ratio (WCAG AA)
+- **Focus Indicators**: Visible focus rings with sufficient contrast
+- **Error States**: Red error messages maintain readability
+- **Border Visibility**: Form controls have visible borders
+- **Windows High Contrast**: Compatible with Windows High Contrast Mode
+
+**Testing**: Uses axe-core to validate color contrast ratios automatically.
+        `,
       },
     },
   },

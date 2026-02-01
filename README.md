@@ -2,6 +2,10 @@
 
 A zero-dependency form engine built with React 18, TypeScript (strict mode), Vite, and Tailwind CSS. Fully accessible, tested via Storybook, and deployed via Chromatic.
 
+[![Chromatic](https://img.shields.io/badge/Chromatic-View%20Storybook-ff4785)](https://www.chromatic.com/library?appId=697af24e6bd167be1e8765e7)
+
+> **📚 Live Storybook**: [View on Chromatic](https://697af24e6bd167be1e8765e7-ikirlsakqe.chromatic.com/)
+
 ## 🎯 Project Goals
 
 - **Schema-first**: Forms are defined as JSON schemas, not code

@@ -89,6 +89,18 @@ export function FormSection({ schema, forceVisible }: FormSectionProps) {
           />
         ))}
       </div>
+
+      {/* Nested Sections (recursive rendering) */}
+      {schema.sections && schema.sections.length > 0 && (
+        <div className="mt-6 pl-4 border-l-2 border-gray-200">
+          {schema.sections.map((nestedSection) => (
+            <FormSection
+              key={nestedSection.id}
+              schema={nestedSection}
+            />
+          ))}
+        </div>
+      )}
     </fieldset>
   );
 }
